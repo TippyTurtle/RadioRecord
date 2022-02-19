@@ -2,7 +2,7 @@
 
 # CapitalFM London Capital Breakfast 6am - 10am Monday - Friday
 # https://www.capitalfm.com/london/radio/schedule/
-# * 6 * * 1-5 /home/radio/Radio/CapitalFM.sh >/dev/null 2>&1
+# 0 6 * * 1-5 /home/radio/Radio/CapitalFM.sh >/dev/null 2>&1
 #
 # You need to have the following installed:
 # streamripper
