@@ -2,7 +2,7 @@
 
 # CapitalFM London Capital Breakfast 6am - 10am Monday - Friday
 # https://www.capitalfm.com/london/radio/schedule/
-# 0 6 * * 1-5 /home/radio/Radio/CapitalFM.sh >/dev/null 2>&1
+# 0 6 * * 1-5 /home/radio/Radio/CapitalFM.sh > /home/radio/Radio/CapitalFM.log
 #
 # You need to have the following installed:
 # streamripper
@@ -13,17 +13,15 @@
 export TZ="Europe/London"
 
 ################## Set Variables ##################
-date=`date +%Y-%m-%d`
 StreamName='CapitalFM-Capital Breakfast'
 OutputDir=/var/www/html/Radio/Radio/
+date=`date +%Y-%m-%d`
 
 url=http://media-sov.musicradio.com:80/Capital
 useragent=' Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
 
 # Duration in Seconds
-duration=3600
-# duration=14520
-# duration=600
+duration=14400
 
 ################## Setup Storage ##################
 mkdir -p ''"$OutputDir"''
