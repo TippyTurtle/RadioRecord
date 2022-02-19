@@ -1,6 +1,8 @@
 #!/bin/sh
 
 # CapitalFM London Capital Breakfast 6am - 10am Monday - Friday
+# https://www.capitalfm.com/london/radio/schedule/
+# * 6 * * 1-5 /home/radio/Radio/CapitalFM.sh >/dev/null 2>&1
 #
 # You need to have the following installed:
 # streamripper
@@ -13,7 +15,7 @@ export TZ="Europe/London"
 ################## Set Variables ##################
 date=`date +%Y-%m-%d`
 StreamName='CapitalFM-Capital Breakfast'
-OutputDir=/var/www/html/Radio/
+OutputDir=/var/www/html/Radio/Radio/
 
 url=http://media-sov.musicradio.com:80/Capital
 useragent=' Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
@@ -32,9 +34,10 @@ cd ''"$OutputDir"''
 streamripper ''"$url"'' -D ''"$StreamName"'/%A-%T&q' -d ''"$OutputDir"'' -l "$duration" -a ''"$StreamName $date"'.aac' -o always -u ''"$useragent"''
 
 ################## After I am done, Clean up misc files ##################
-rm -f "$OutputDir"*.log
-rm -f "$OutputDir"*.cue
+rm -f ''"$OutputDir"'*.log'
+rm -f ''"$OutputDir"'*.cue'
 rm -f ''"$OutputDir$StreamName"'/ - .aac'
+rm -f ''"$OutputDir$StreamName"'/incomplete/*.aac'
 
 ################## Concat All the Broken Pieces ##################
 ## mv "$OutputDir${StreamName} ${date}.aac" "$OutputDir${StreamName} ${date}(9).aac"
@@ -51,8 +54,7 @@ ln -s ''"$OutputDir$StreamName"' '"$date"'.aac' ''"$OutputDir$StreamName-Latest"
 for CurrentFile in "${OutputDir}${StreamName}/"*.aac; do 
   b=$(basename "$CurrentFile")
   echo "$MyCount $b XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-  ffmpeg -hide_banner -loglevel error -n -threads 1 -i "$CurrentFile" -ac 2 -ab 192k ''"$OutputDir$StreamName"'/MP3/'"${b%.aac}"'.mp3'
-  rm "$CurrentFile"
+  ffmpeg -hide_banner -loglevel error -n -threads 1 -i "$CurrentFile" -ac 2 -ab 192k ''"$OutputDir$StreamName"'/MP3/'"${b%.aac}"'.mp3' && rm "$CurrentFile"
   MyCount=$((MyCount+1))
 done
 
