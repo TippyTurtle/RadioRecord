@@ -31,13 +31,13 @@ mkdir -p ''"$OutputDir$StreamName"'/MP3/'
 cd ''"$OutputDir"''
 
 ################## XXX "Record" Broadcast XXX ##################
-streamripper ''"$url"'' -D ''"$StreamName"'/%A-%T&q' -d ''"$OutputDir"'' -l "$duration" -a ''"$StreamName $date"'.aac' -o always -u ''"$useragent"''
+streamripper "$url" -D "$StreamName/%A-%T%q" -d "$OutputDir" -l "$duration" -a "$StreamName $date.aac" -o always -u "$useragent"
 
 ################## After I am done, Clean up misc files ##################
-rm -f ''"$OutputDir"'*.log'
-rm -f ''"$OutputDir"'*.cue'
-rm -f ''"$OutputDir$StreamName"'/ - .aac'
-rm -f ''"$OutputDir$StreamName"'/incomplete/*.aac'
+rm -f "$OutputDir*.log"
+rm -f "$OutputDir*.cue"
+rm -f "$OutputDir$StreamName/ - .aac"
+rm -f "$OutputDir$StreamName/incomplete/*.aac"
 
 ################## Concat All the Broken Pieces ##################
 ## mv "$OutputDir${StreamName} ${date}.aac" "$OutputDir${StreamName} ${date}(9).aac"
@@ -46,15 +46,12 @@ rm -f ''"$OutputDir$StreamName"'/incomplete/*.aac'
 ## rm ${OutputDir}ConCat.txt
 
 ################## AFTER everything is sorted, this will put the LATEST sym link down ##################
-rm -f -- ''"$OutputDir"'Latest-'"$StreamName"'.aac'
-ln -s ''"$OutputDir$StreamName"' '"$date"'.aac' ''"$OutputDir$StreamName-Latest"'.aac'
+rm -f -- $OutputDir$StreamName-Latest.aac"
+ln -s "$OutputDir$StreamName $date.aac $OutputDir$StreamName-Latest.aac"
 
 ################## Convert individual songs into MP3 ##################
-
-for CurrentFile in "${OutputDir}${StreamName}/"*.aac; do 
+for CurrentFile in "${OutputDir}${StreamName}/*.aac"; do 
   b=$(basename "$CurrentFile")
-  echo "$MyCount $b XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-  ffmpeg -hide_banner -loglevel error -n -threads 1 -i "$CurrentFile" -ac 2 -ab 192k ''"$OutputDir$StreamName"'/MP3/'"${b%.aac}"'.mp3' && rm "$CurrentFile"
-  MyCount=$((MyCount+1))
+  ffmpeg -hide_banner -loglevel error -n -threads 1 -i "$CurrentFile" -ac 2 -ab 192k "$OutputDir$StreamName/MP3/${b%.aac}.mp3" && rm "$CurrentFile"
 done
 
