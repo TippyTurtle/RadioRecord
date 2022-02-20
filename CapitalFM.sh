@@ -14,22 +14,22 @@ export TZ="Europe/London"
 
 ################## Set Variables ##################
 StreamName='CapitalFM-Capital Breakfast'
-OutputDir=/var/www/html/Radio/Radio/
+OutputDir='/var/www/html/Radio/Radio/'
 date=`date +%Y-%m-%d`
 
-url=http://media-sov.musicradio.com:80/Capital
+url='http://media-sov.musicradio.com:80/Capital'
 useragent=' Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
 
 # Duration in Seconds
 duration=14400
 
 ################## Setup Storage ##################
-mkdir -p ''"$OutputDir"''
-mkdir -p ''"$OutputDir$StreamName"'/MP3/'
-cd ''"$OutputDir"''
+mkdir -p "$OutputDir"
+mkdir -p "$OutputDir$StreamName/MP3/"
+cd "$OutputDir"
 
 ################## XXX "Record" Broadcast XXX ##################
-streamripper "$url" -D "$StreamName/%A-%T%q" -d "$OutputDir" -l "$duration" -a "$StreamName $date.aac" -o always -u "$useragent"
+streamripper "$url" -D "$StreamName/%A-%T" -d "$OutputDir" -l "$duration" -a "$StreamName $date.aac" -o always -u "$useragent"
 
 ################## After I am done, Clean up misc files ##################
 rm -f "$OutputDir*.log"
@@ -44,11 +44,11 @@ rm -f "$OutputDir$StreamName/incomplete/*.aac"
 ## rm ${OutputDir}ConCat.txt
 
 ################## AFTER everything is sorted, this will put the LATEST sym link down ##################
-rm -f -- $OutputDir$StreamName-Latest.aac"
+rm -f -- "$OutputDir$StreamName-Latest.aac"
 ln -s "$OutputDir$StreamName $date.aac $OutputDir$StreamName-Latest.aac"
 
 ################## Convert individual songs into MP3 ##################
-for CurrentFile in "${OutputDir}${StreamName}/*.aac"; do 
+for CurrentFile in "${OutputDir}${StreamName}"/*.aac; do 
   b=$(basename "$CurrentFile")
   ffmpeg -hide_banner -loglevel error -n -threads 1 -i "$CurrentFile" -ac 2 -ab 192k "$OutputDir$StreamName/MP3/${b%.aac}.mp3" && rm "$CurrentFile"
 done
